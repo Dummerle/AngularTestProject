@@ -1,0 +1,12 @@
+<h1>Zweite Seite</h1>
+
+<form (ngSubmit)="onSubmit()" [formGroup]="loginForm">
+
+    <p><input formControlName="name" name="name" placeholder="Name" type="text"/></p>
+    <p><input formControlName="password" name="password" placeholder="Passwort" type="password"></p>
+
+    <p>
+        <button type="submit">Login</button>
+    </p>
+</form>
+
