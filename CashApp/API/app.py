@@ -20,7 +20,7 @@ def getData():
     return resp
 
 
-@app.route("/api/send", methods=["POST", "GET"])
+@app.route("/api/send", methods=["POST", "GET", "OPTIONS"])
 def send():
     print("Hi")
     print(request.method)
@@ -28,7 +28,7 @@ def send():
     resp.headers["Access-Control-Allow-Origin"] = "*"
     resp.headers["Access-Control-Allow-Methods"] = "POST,GET"
     resp.headers["Access-Control-Allow-Headers"] = "Content-Type, Access-Control-Allow-Headers"
-    
+
     return resp
 
 
