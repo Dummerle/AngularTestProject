@@ -2,6 +2,8 @@ import {Component, OnInit, ViewChild, ElementRef} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 
+import {CookieService} from 'ngx-cookie-service';
+
 @Component({
     selector: 'app-second',
     templateUrl: './second.component.html',
@@ -9,24 +11,20 @@ import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 })
 export class SecondComponent implements OnInit {
     test;
-    head = new HttpHeaders({
-        'Access-Control-Allow-Origin': '*'
-    });
-
-    options = {headers: this.head};
+    resp;
+    correctForm = true;
     apiGetUrl = 'http://localhost:5000/api/getData';
     apiPostUrl = 'http://localhost:5000/api/send';
     x: any;
     loginForm = new FormGroup({
-        name: new FormControl(null, [Validators.required]),
-        password: new FormControl()
+        password: new FormControl(null, Validators.required)
     });
 
-    constructor(private http: HttpClient, private formBuilder: FormBuilder) {
+    constructor(private http: HttpClient, private cookie: CookieService) {
     }
 
     ngOnInit(): void {
-        /*
+
         this.http.get(this.apiGetUrl).subscribe(
             ok => {
                 this.x = ok;
@@ -37,13 +35,14 @@ export class SecondComponent implements OnInit {
             fil => {
             }
         );
-*/
+
     }
 
     onSubmit(): void {
         console.log(this.loginForm.value);
         if (this.loginForm.valid) {
-            this.http.post(this.apiPostUrl, this.loginForm.value).subscribe(
+            this.correctForm = true;
+            this.resp = this.http.post(this.apiPostUrl, this.loginForm.value).subscribe(
                 ok => {
                     console.log(ok);
                 },
@@ -52,8 +51,10 @@ export class SecondComponent implements OnInit {
                 }
             );
         } else {
-            console.log('Falsche Eingabe');
+            this.correctForm = false;
         }
     }
-
+    logCookie(): void{
+        console.log(this.cookie.getAll());
+    }
 }
