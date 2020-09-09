@@ -2,11 +2,14 @@
 
 <form (ngSubmit)="onSubmit()" [formGroup]="loginForm">
 
-    <p><input formControlName="name" name="name" placeholder="Name" type="text"/></p>
-    <p><input formControlName="password" name="password" placeholder="Passwort" type="password"></p>
+ 1   <p><input formControlName="password" name="password" placeholder="Passwort" type="password"></p>
 
     <p>
         <button type="submit">Login</button>
     </p>
 </form>
 
+<p *ngIf="!correctForm" style="color: red">Falsche Eingabe</p>
+
+
+<button (click)="logCookie()">Log cookies</button>
