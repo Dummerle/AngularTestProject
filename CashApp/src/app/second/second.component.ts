@@ -56,5 +56,6 @@ export class SecondComponent implements OnInit {
     }
     logCookie(): void{
         console.log(this.cookie.getAll());
+        this.ngOnInit();
     }
 }

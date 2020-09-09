@@ -27,8 +27,9 @@ def getData():
         "z": "xyz",
         "list": ["xy", "z", "huju", "xy"]
     }))
-    resp.headers["Access-Control-Allow-Origin"] = "*"
+    resp.headers["Access-Control-Allow-Origin"] = "http://localhost:4200"
     resp.headers["Access-Control-Request-Methods"] = "POST, GET"
+    resp.headers["Access-Control-Allow-Credentials"] = "true"
     return resp
 
 
@@ -44,7 +45,7 @@ def send():
     if get_hash(password)==adminkey:
         resp.set_cookie("adminkey", adminkey)
         print("cookie set")
-    resp.headers["Access-Control-Allow-Origin"] = "*"
+    resp.headers["Access-Control-Allow-Origin"] = "http://localhost:4200"
     # resp.headers["Access-Control-Allow-Methods"] = "POST,GET"
     resp.headers["Access-Control-Allow-Headers"] = "Content-Type, Access-Control-Allow-Headers"
     resp.headers["Access-Control-Allow-Credentials"] = "true"
