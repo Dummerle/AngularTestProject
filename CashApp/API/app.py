@@ -30,18 +30,20 @@ def second():
 
 @app.route("/api/getData")
 def getData():
-    resp: Response = make_response(jsonify({
-        "xy": 4,
-        "z": "xyz",
-        "list": ["xy", "z", "huju", "xy"]
-    }))
-    resp = add_headers(resp)
+    data = {"lol": [42, 1337]}
+    if request.cookies.get("adminkey"):
+
+        resp: Response = make_response(jsonify(data), 200)
+        resp = add_headers(resp)
+    else:
+        resp: Response = make_response(jsonify(None), 401)
+        resp = add_headers(resp)
     return resp
 
 
 @app.route("/api/send", methods=["POST", "OPTIONS"])
 def send():
-    data = {"lol": [42, 1337]}
+
     password = ""
     if request.method == "POST":
         data = request.get_data(as_text=True)
@@ -49,14 +51,14 @@ def send():
         password = str(data['password'])
         print(request.cookies.get("adminkey"))
         if get_hash(password) == adminkey:
-            resp: Response = make_response(jsonify(data), 200)
+            resp: Response = make_response(jsonify(None), 200)
             resp.set_cookie("adminkey", adminkey)
             print("cookie set und eingelogt")
 
         elif request.cookies.get("adminkey") == adminkey:
             print("Adminkey gesetzt")
             print(request.cookies.get("adminkey"))
-            resp = make_response(jsonify(data), 200)
+            resp = make_response(jsonify(None), 200)
 
         else:
             resp = make_response(jsonify(None), 401)
@@ -75,9 +77,9 @@ def send():
 def check():
     if request.cookies.get("adminkey") == adminkey:
         print(adminkey)
-        resp = make_response(None, 200)
+        resp = make_response(jsonify(None), 200)
     else:
-        resp = make_response(None, 401)
+        resp = make_response(jsonify(None), 401)
 
     resp = add_headers(resp)
     print(resp)

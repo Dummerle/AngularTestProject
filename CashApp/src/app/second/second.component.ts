@@ -12,7 +12,6 @@ import {CookieService} from 'ngx-cookie-service';
 export class SecondComponent implements OnInit {
     test;
     data;
-    resp;
     login = false;
     apiGetUrl = 'http://localhost:5000/api/getData';
     apiPostUrl = 'http://localhost:5000/api/send';
@@ -28,16 +27,9 @@ export class SecondComponent implements OnInit {
         this.http.get('http://localhost:5000/api/check').subscribe(
             ok => {
                 this.login = true;
-            }
-        );
-        this.http.get(this.apiGetUrl).subscribe(
-            ok => {
-                this.x = ok;
-                this.x.list.forEach(function(val): void {
-                    // console.log(val);
-                });
+                this.getData();
             },
-            fil => {
+            err => {
             }
         );
 
@@ -46,11 +38,11 @@ export class SecondComponent implements OnInit {
     onSubmit(): void {
         console.log(this.loginForm.value);
         if (this.loginForm.valid) {
-            this.resp = this.http.post(this.apiPostUrl, this.loginForm.value).subscribe(
+            this.http.post(this.apiPostUrl, this.loginForm.value).subscribe(
                 ok => {
                     console.log(ok);
                     this.login = true;
-                    this.data = ok;
+                    this.getData();
                 },
                 err => {
                     console.log('FALSCH');
@@ -59,5 +51,17 @@ export class SecondComponent implements OnInit {
             );
 
         }
+    }
+
+    getData(): void {
+        this.http.get(this.apiGetUrl).subscribe(
+            ok => {
+                this.data = ok;
+                this.data = this.data.lol;
+            },
+            error => {
+                console.log('Authorization Error');
+            }
+        );
     }
 }
