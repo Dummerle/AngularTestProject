@@ -1,15 +1,17 @@
 <h1>Zweite Seite</h1>
 
-<form (ngSubmit)="onSubmit()" [formGroup]="loginForm">
+<form (ngSubmit)="onSubmit()" [formGroup]="loginForm" *ngIf="!login">
 
- 1   <p><input formControlName="password" name="password" placeholder="Passwort" type="password"></p>
+    <p><input formControlName="password" name="password" placeholder="Passwort" type="password"></p>
 
     <p>
         <button type="submit">Login</button>
     </p>
 </form>
 
-<p *ngIf="!correctForm" style="color: red">Falsche Eingabe</p>
 
+<div *ngIf="login">
+    Daten: {{data}}
 
-<button (click)="logCookie()">Log cookies</button>
+</div>
+

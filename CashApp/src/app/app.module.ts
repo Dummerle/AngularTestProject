@@ -9,12 +9,14 @@ import {SecondComponent} from './second/second.component';
 import {HttpClientModule} from '@angular/common/http';
 import {ReactiveFormsModule} from '@angular/forms';
 import { AuthInterceptor } from './http-interceptors/auth-interceptor';
+import {AdminpageComponent} from './adminpage/adminpage.component';
 
 @NgModule({
     declarations: [
         AppComponent,
         HomeComponent,
-        SecondComponent
+        SecondComponent,
+        AdminpageComponent,
     ],
     imports: [
         BrowserModule,

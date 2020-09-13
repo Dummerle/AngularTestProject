@@ -1,9 +1,17 @@
 import _hashlib
 
-from flask import Flask, render_template, jsonify, make_response, Response, request, redirect
+from flask import Flask, render_template, jsonify, make_response, Response, request
 
 app = Flask(__name__)
 adminkey = "d404559f602eab6fd602ac7680dacbfaadd13630335e951f097af3900e9de176b6db28512f2e000b9d04fba5133e8b1c6e8df59db3a8ab9d60be4b97cc9e81db"
+
+
+def add_headers(resp):
+    resp.headers["Access-Control-Allow-Origin"] = "http://localhost:4200"
+    resp.headers["Access-Control-Request-Methods"] = "POST, GET"
+    resp.headers["Access-Control-Allow-Credentials"] = "true"
+    resp.headers["Access-Control-Allow-Headers"] = "content-type"
+    return resp
 
 
 def get_hash(text: str):
@@ -27,29 +35,52 @@ def getData():
         "z": "xyz",
         "list": ["xy", "z", "huju", "xy"]
     }))
-    resp.headers["Access-Control-Allow-Origin"] = "http://localhost:4200"
-    resp.headers["Access-Control-Request-Methods"] = "POST, GET"
-    resp.headers["Access-Control-Allow-Credentials"] = "true"
+    resp = add_headers(resp)
     return resp
 
 
 @app.route("/api/send", methods=["POST", "OPTIONS"])
 def send():
-    resp: Response = make_response(jsonify(1), 200)
+    data = {"lol": [42, 1337]}
     password = ""
     if request.method == "POST":
         data = request.get_data(as_text=True)
         data = eval(data)
         password = str(data['password'])
+        print(request.cookies.get("adminkey"))
+        if get_hash(password) == adminkey:
+            resp: Response = make_response(jsonify(data), 200)
+            resp.set_cookie("adminkey", adminkey)
+            print("cookie set und eingelogt")
 
-    if get_hash(password)==adminkey:
-        resp.set_cookie("adminkey", adminkey)
-        print("cookie set")
-    resp.headers["Access-Control-Allow-Origin"] = "http://localhost:4200"
-    # resp.headers["Access-Control-Allow-Methods"] = "POST,GET"
-    resp.headers["Access-Control-Allow-Headers"] = "Content-Type, Access-Control-Allow-Headers"
-    resp.headers["Access-Control-Allow-Credentials"] = "true"
-    resp.set_cookie("hallo", "Peter")
+        elif request.cookies.get("adminkey") == adminkey:
+            print("Adminkey gesetzt")
+            print(request.cookies.get("adminkey"))
+            resp = make_response(jsonify(data), 200)
+
+        else:
+            resp = make_response(jsonify(None), 401)
+            print("Nicht erlaubt")
+
+        resp = add_headers(resp)
+        return resp
+
+    if request.method == "OPTIONS":
+        resp = make_response(jsonify(None), 200)
+        resp = add_headers(resp)
+        return resp
+
+
+@app.route("/api/check")
+def check():
+    if request.cookies.get("adminkey") == adminkey:
+        print(adminkey)
+        resp = make_response(None, 200)
+    else:
+        resp = make_response(None, 401)
+
+    resp = add_headers(resp)
+    print(resp)
     return resp
 
 
